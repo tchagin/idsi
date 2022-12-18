@@ -12,10 +12,13 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    const ROLES = [
-        'manager' => 'manager',
-        'client' => 'client',
-    ];
+    const ROLE_MANAGER = 'manager';
+    const ROLE_CLIENT = 'client';
+
+//    const ROLES = [
+//        'manager' => 'manager',
+//        'client' => 'client',
+//    ];
 
     /**
      * The attributes that are mass assignable.
@@ -47,4 +50,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function isManager(){
+        return $this->role == User::ROLE_MANAGER;
+    }
+
+    public function isClient(){
+        return $this->role == User::ROLE_CLIENT;
+    }
 }

@@ -18,17 +18,18 @@ class ClientController extends Controller
         return view('client.index');
     }
 
-    public function application(Request $request){
-        $client_application = Application::where('user_id', auth()->user()->id)->orderby('id', 'desc')->first();
-        if (isset($client_application)){
-            $application_date = $client_application->created_at;
-            $current_date = $application_date->addHours(24);
-            $dt = Carbon::now()->toDateTimeString(); # Дата
-        }
+    public function addApplication(Request $request){
+        try {
+            $client_application = Application::where('user_id', auth()->user()->id)->orderby('id', 'desc')->first();
+            if (isset($client_application)){
+                $application_date = $client_application->created_at;
+                $current_date = $application_date->addHours(24);
+                $dt = Carbon::now()->toDateTimeString(); # Дата
+            }
 
-        if (isset($client_application) && ($dt < $current_date)){
-            return redirect()->route('client.index')->with('error', 'Отправка формы возможно только 1 раз в сутки');
-        }else{
+            if (isset($client_application) && ($dt < $current_date)){
+                return redirect()->route('client.index')->with('error', 'Отправка формы возможно только 1 раз в сутки');
+            }
             $rules = ([
                 'theme' => 'required',
                 'message' => 'required',
@@ -56,20 +57,14 @@ class ClientController extends Controller
                 $body .= "<a href=\"{$uploadFile}\" target='_blank'>Скачать файл</a>";
             }
 
-//        SendApplicationToMailJob::dispatch($body)->onQueue('application-mail');
             $emailJobs = (new SendApplicationToMailJob($body))->onQueue('application-mail');
             dispatch($emailJobs);
 
             return redirect()->route('client.index')->with('success', 'Данные отправлены');
+        } catch (\Exception $e) {
+            return back()->with('error', $e->getMessage());
         }
 
-    }
 
-    public function changeStatus($id){
-        $application = Application::find($id);
-        $application->update([
-            'status' => 'completed',
-        ]);
-        return redirect()->back()->with('success', 'Статус заявки изменён');
     }
 }
