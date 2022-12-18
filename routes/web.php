@@ -17,21 +17,17 @@ Route::get('/', function () {
     return view('auth.login');
 });
 
-//Route::group(['middleware' => 'auth'], function (){
-//    Route::group(['middleware' => 'manager'], function (){
-//        Route::get('/manager', [\App\Http\Controllers\Manager\ManagerController::class, 'index'])->name('manager.index');
-//        Route::get('/application-status/{id}', [\App\Http\Controllers\Client\ClientController::class, 'changeStatus'])->name('application.status');
-//    });
-//    Route::group(['middleware' => 'client'], function () {
-//        Route::get('/client', [\App\Http\Controllers\Client\ClientController::class, 'index'])->name('client.index');
-//        Route::post('/client-application', [\App\Http\Controllers\Client\ClientController::class, 'application'])->name('client.application');
-//    });
-//});
+Route::group(['middleware' => 'auth'], function (){
+    Route::group(['middleware' => 'manager'], function (){
+        Route::get('/manager', [\App\Http\Controllers\Manager\ManagerController::class, 'index'])->name('manager.index');
+        Route::get('/application-status/{id}', [\App\Http\Controllers\Client\ClientController::class, 'changeStatus'])->name('application.status');
+    });
+    Route::group(['middleware' => 'client'], function () {
+        Route::get('/client', [\App\Http\Controllers\Client\ClientController::class, 'index'])->name('client.index');
+        Route::post('/client-application', [\App\Http\Controllers\Client\ClientController::class, 'application'])->name('client.application');
+    });
+});
 
-Route::get('/manager', [\App\Http\Controllers\Manager\ManagerController::class, 'index'])->name('manager.index');
-Route::get('/application-status/{id}', [\App\Http\Controllers\Client\ClientController::class, 'changeStatus'])->name('application.status');
-Route::get('/client', [\App\Http\Controllers\Client\ClientController::class, 'index'])->name('client.index');
-Route::post('/client-application', [\App\Http\Controllers\Client\ClientController::class, 'application'])->name('client.application');
 
 Auth::routes();
 
