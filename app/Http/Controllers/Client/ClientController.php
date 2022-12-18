@@ -57,14 +57,13 @@ class ClientController extends Controller
                 $body .= "<a href=\"{$uploadFile}\" target='_blank'>Скачать файл</a>";
             }
 
-            $emailJobs = (new SendApplicationToMailJob($body))->onQueue('application-mail');
-            dispatch($emailJobs);
+//            $emailJobs = (new SendApplicationToMailJob($body))->onQueue('application-mail');
+//            dispatch($emailJobs);
+            SendApplicationToMailJob::dispatch($body)->onQueue('application-mail');
 
             return redirect()->route('client.index')->with('success', 'Данные отправлены');
         } catch (\Exception $e) {
             return back()->with('error', $e->getMessage());
         }
-
-
     }
 }
