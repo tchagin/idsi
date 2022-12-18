@@ -52,8 +52,9 @@ class ClientController extends Controller
             $body .= "<p><b>Сообщение:</b> {$application->message}</p>";
             $body .= "<p><b>Имя клиента:</b> {$application->user->name}</p>";
             $body .= "<p><b>Email:</b> {$application->user->email}</p>";
-            $uploadFile = asset('/uploads/' . $application->file);
+
             if (isset($application->file)){
+                $uploadFile = asset('/uploads/' . $application->file);
                 $body .= "<a href=\"{$uploadFile}\" target='_blank'>Скачать файл</a>";
             }
 
