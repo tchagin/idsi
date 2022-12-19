@@ -55,7 +55,7 @@ class ClientController extends Controller
 
             if (isset($application->file)){
                 $uploadFile = asset('/uploads/' . $application->file);
-                $body .= "<a href=\"{$uploadFile}\" target='_blank'>Скачать файл</a>";
+                $body .= "<a href=\"{$uploadFile}\" download=\"\">Скачать файл</a>";
             }
 
 //            $emailJobs = (new SendApplicationToMailJob($body))->onQueue('application-mail');
